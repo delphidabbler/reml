@@ -1,0 +1,297 @@
+<head>
+
+<meta charset="UTF-8" />
+<meta http-equiv=X-UA-Compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta name="author" content="Peter Johnson">
+<meta name="description" content="REML markup language v4">
+<meta name="author" content="Peter Johnson">
+<meta name="copyright" content="Peter Johnson - https://gravatar.com/delphidabbler, (c) 2024">
+
+<link rel="stylesheet" type="text/css" media="screen" href="main.css">
+
+<title>REML v4 Definition</title>
+
+</head>
+
+<body>
+
+<header>
+
+  <div id="title">
+    <p>
+      REML v4 Definition
+    </p>
+  </div>
+
+  <nav id="contents">
+    <ul>
+      <li>
+        <a href="#intro">Introduction</a>
+      </li>
+      <li>
+        <a href="#tags">Tags</a>
+      </li>
+      <li>
+        <a href="#entities">Character Entities</a>
+      </li>
+    </ul>
+  </nav>
+
+</header>
+
+<main>
+
+<section id="intro">
+
+  <h1>
+    Introduction
+  </h1>
+
+  <p>
+    REML is a SGML language similar to a greatly simplified HTML. It was designed to be used to format short blocks of text.
+  </p>
+
+  <p>
+    This document provides the authoritative definition of REML v4. It also provides some notes for implementors of REML interpreters.
+  </p>
+
+  <p>
+    v4 was released on 2011-12-31.
+  </p>
+
+</section>
+
+<section id="tags">
+
+  <h1>
+    Tags
+  </h1>
+
+  <p>
+    There are two types of tags: block and inline.
+  </p>
+
+  <aside>
+    <div>
+      If an unrecognised tag is encountered in REML code then the interpreter <em>should</em> report an error. However, providing start and end tags are matched, the interpreter <em>may</em> choose to simply ignore the tags.
+    </div>
+  </aside>
+  
+  <h2>
+    Block Tags
+  </h2>
+
+  <p>
+    Block tags separate the enclosed text into &quot;paragraphs&quot; of some kind. Blocks always begin on a new line. 
+  </p>
+
+  <p>
+    The supported tags are: 
+  </p>
+
+  <ul class="half-spaced">
+  
+    <li>
+      <code class="value">&lt;p&gt;...&lt;/p&gt;</code> &ndash; Interpret the enclosed markup as a simple paragraph. 
+    </li>
+  
+    <li>
+      <code class="value">&lt;heading&gt;...&lt;/heading&gt;</code> &ndash; Interpret the enclosed markup as a heading.
+    </li>
+  
+  </ul>
+
+  <p>
+    The following rules apply to the use of block tags:
+  </p>
+  
+  <ul class="half-spaced">
+  
+    <li>
+      Tags <span class="very-strong">must</span> be matched, e.g. <code class="value">&lt;p&gt;</code> <span class="very-strong">must</span> have a matching <code class="value">&lt;/p&gt;</code>.
+    </li>
+  
+    <li>
+      Block tags <span class="very-strong">must not</span> contain other block tags.
+    </li>
+  
+    <li>
+      All text <em>should</em> be embedded within block tags, e.g. <code class="value">&lt;heading&gt;heading&lt;/heading&gt;&lt;p&gt;text&lt;/p&gt;</code> or simply <code class="value">&lt;p&gt;text&lt;/p&gt;</code>.
+    </li>
+  
+    <li>
+      White space between blocks <span class="very-strong">must</span> be ignored.
+    </li>
+  
+  </ul>
+  
+  <p>
+    Here is a valid example:
+  </p>
+  
+  <pre class="sample">&lt;heading&gt;Hello&lt;/heading&gt;
+&lt;p&gt;Hello World&lt;/p&gt;</pre>
+  
+  <p>
+    Strictly speaking, the following example is invalid code &ndash; all occurrences of <code class="value">wrong</code> are in error because they are not contained within block tags.
+  </p>
+  
+  <pre class="sample">wrong &lt;heading&gt;blah&lt;/heading&gt; wrong &lt;p&gt;blah&lt;/p&gt; wrong</pre>
+  
+  <p>
+    However interpreters <em>should</em> treat this code permissively. Text outside blocks <em>should</em> be interpreted as if it was enclosed in <code class="value">&lt;p&gt;</code> and <code class="value">&lt;/p&gt;</code> tags. Therefore the above code would be interpreted as:
+  </p>
+  
+  <pre class="sample">&lt;p&gt;wrong &lt;/p&gt;&lt;heading&gt;blah&lt;/heading&gt;&lt;p&gt;wrong &lt;/p&gt;&lt;p&gt;blah&lt;/p&gt;&lt;p&gt;wrong&lt;/p&gt;</pre>
+  
+  <h2>
+    Inline Tags
+  </h2>
+
+  <p>
+    Inline tags describe the type of text enclosed between the start and end tags.
+  </p>
+
+  <p>
+    The supported inline tags are:
+  </p>
+
+  <ul class="half-spaced">
+
+    <li>
+      <code class="value">&lt;strong&gt;...&lt;/strong&gt;</code> &ndash; The enclosed markup has strong emphasis.
+    </li>
+
+    <li>
+      <code class="value">&lt;em&gt;...&lt;/em&gt;</code> &ndash; The enclosed markup has weak emphasis.
+    </li>
+
+    <li>
+      <code class="value">&lt;var&gt;...&lt;/var&gt;</code> &ndash; The enclosed markup represents a variable.
+    </li>
+
+    <li>
+      <code class="value">&lt;warning&gt;...&lt;/warning&gt;</code> &ndash; The enclosed markup is a warning.
+    </li>
+
+    <li>
+      <code class="value">&lt;mono&gt;...&lt;/mono&gt;</code> &ndash; The enclosed markup should be displayed in a mono-spaced font.
+    </li>
+
+    <li>
+      <code class="value">&lt;a href="url"&gt;...&lt;/a&gt;</code> &ndash; The enclosed markup is a hyper-link. The <code class="value">href</code> attribute <span class="very-strong">must</span> specify the required URL, which <span class="very-strong">must</span> use one of the <code class="value">http</code>, <code class="value">https</code> or <code class="value">file</code> protocols.
+    </li>
+
+  </ul>
+
+  <p>
+    The following rules apply to the use of inline tags:
+  </p>
+
+  <ul class="half-spaced">
+  
+    <li>
+      Tags <span class="very-strong">must</span> be embedded inside a valid block tag. E.g. <code class="value">&lt;p&gt;one&lt;strong&gt;two&lt;/strong&gt;three&lt;/p&gt;</code>. However those REML interpreters that allow for the omission of some block tags  (see above) relax this restriction.
+    </li>
+  
+    <li>
+      Tags <span class="very-strong">must</span> match. E.g. <code class="value">&lt;em&gt;</code> must be matched with <code class="value">&lt;/em&gt;</code>.
+    </li>
+
+    <li>
+      Tags may be nested, providing the tags are balanced. E.g. <code class="value">&lt;em&gt;blah &lt;var&gt;blah&lt;/var&gt;&lt;/em&gt;</code> is valid but <code class="value">&lt;em&gt;blah &lt;var&gt;blah&lt;/em&gt;&lt;/var&gt;</code> is not.
+    </li>
+
+  </ul>
+
+  <p>
+    Examples:
+  </p>
+  
+  <pre class="sample">&lt;p&gt;Make stuff &lt;strong&gt;stand out&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Emphasised &lt;warning&gt;warning!&lt;/warning&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Refer to a function &lt;var&gt;parameter&lt;/var&gt;.&lt;/p&gt;
+&lt;p&gt;Use the: &lt;mono&gt;Windows&lt;/mono&gt; unit.&lt;/p&gt;
+&lt;p&gt;See this &lt;a href="https://example.com"&gt;example&lt;/a&gt;.&lt;/p&gt;</pre>
+
+</section>
+
+<section id="entities">
+
+  <h1>
+    Character Entities
+  </h1>
+
+  <p>
+    A few symbolic character entities are supported in REML. They all have analogues in XHTML or HTML 5.
+  </p>
+
+  <p>
+    The supported symbolic character entities are:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Character Entity</th>
+        <th>Actual Character</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>&amp;amp;</code></td>
+        <td>&amp;</td>
+      </tr>
+      <tr>
+        <td><code>&amp;quot;</code></td>
+        <td>&quot;</td>
+      </tr>
+      <tr>
+        <td><code>&amp;gt;</code></td>
+        <td>&gt;</td>
+      </tr>
+      <tr>
+        <td><code>&amp;lt;</code></td>
+        <td>&lt;</td>
+      </tr>
+      <tr>
+        <td><code>&amp;copy;</code></td>
+        <td>©</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    The '&lt;' and '&amp;' characters are special within the markup and cannot be used literally in text. The <code class="value">&amp;lt;</code> character entity <span class="very-strong">must</span> be used in place of '&lt;' and <code class="value">&amp;amp;</code> <span class="very-strong">must</span> be used instead of '&amp;'. For example to write <code class="value">x&lt;y</code> in REML use <code class="value">x&amp;lt;y</code> and to write <code class="value">you &amp; me</code> use <code class="value">you &amp;amp; me</code>.
+  </p>
+
+  <p>
+    To express other special symbols for which there is no symbolic character entity, numeric character entities can be used. For example to display the 'Ω' character (Unicode <em>Greek capital letter Omega</em>) use <code class="value">&amp;#937;</code>.
+  </p>
+
+  <aside>
+    <div>
+      <strong>Note:</strong> Numeric entities should be used with caution because the characters they represent may vary across different text encodings, whereas symbolic entities are safe across encodings.
+    </div>
+  </aside>
+
+</section>
+
+<footer>
+
+  <nav id="footer-nav">
+
+    <p>Back to <a href="index.html">Index Page</a>.</p>
+
+  </nav>
+
+</footer>
+
+</main>
+
+</html>
